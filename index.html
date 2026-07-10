@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Veille Concurrentielle Marketplaces",
+  "schemaVersion": 1,
+  "description": "Veille concurrentielle hebdomadaire sur 9 marketplaces freelance concurrentes de LittleBig Connection (Malt, Fiverr, Upwork, Lifted, Freelancer.com, LeHibou, Comet, Toptal, Deel) : actus produit, funding, positionnement, avec score de confiance et sources par info. Mise à jour chaque lundi."
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Competitive Watch — Freelance Marketplaces</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #f7f6f3;
+    color: #1f1d1a;
+    padding: 24px 32px 64px;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .subtitle { color: #6b6459; font-size: 13px; margin-bottom: 20px; }
+
+  .tabs {
+    display: flex; gap: 4px; border-bottom: 1px solid #e6e2da; margin-bottom: 20px;
+  }
+  .tab-btn {
+    appearance: none; border: none; background: none; cursor: pointer;
+    font-family: inherit; font-size: 13.5px; font-weight: 600; color: #9b958a;
+    padding: 10px 16px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: #4a463f; }
+  .tab-btn.active { color: #8a5a2a; border-bottom-color: #8a5a2a; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .meta-bar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    background: #fff; border: 1px solid #e6e2da; border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 24px; font-size: 13px; color: #4a463f;
+  }
+  .meta-bar b { color: #1f1d1a; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e6e2da;
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .card-lbc {
+    background: #edf1f7;
+    border: 1px solid #c9d4e3;
+  }
+  .card-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .card-head h2 { font-size: 16px; margin: 0; }
+  .tag {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: #8a5a2a; background: #fbeee0; padding: 2px 7px; border-radius: 6px;
+  }
+  .tag-lbc {
+    color: #2b4d78; background: #dbe4f0;
+  }
+  .updated { font-size: 11px; color: #9b958a; margin-bottom: 10px; }
+  ul.items { list-style: none; margin: 0; padding: 0; }
+  ul.items li {
+    padding: 8px 0; border-top: 1px solid #f0eee8; font-size: 13px; line-height: 1.45;
+  }
+  ul.items li:first-child { border-top: none; }
+  .card-lbc ul.items li { border-top-color: #dde5f0; }
+  .conf {
+    display: inline-block; font-size: 10.5px; font-weight: 600; padding: 1px 6px;
+    border-radius: 5px; margin-left: 6px; vertical-align: middle; white-space: nowrap;
+  }
+  .conf-high { background: #e4f3e6; color: #276b35; }
+  .conf-med { background: #fdf1d8; color: #93650b; }
+  .conf-low { background: #fbe4e4; color: #a13333; }
+  .conf-na { background: #ececec; color: #666; }
+  .cat {
+    display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px;
+    border-radius: 5px; margin-right: 6px; vertical-align: middle; white-space: nowrap;
+    background: #eaf1fb; color: #2b5f96;
+  }
+  .src { display: block; font-size: 11.5px; margin-top: 2px; }
+  .src a { color: #6b6459; text-decoration: none; border-bottom: 1px dotted #b8b2a5; }
+  .src a:hover { color: #1f1d1a; }
+  .watch {
+    margin-top: 10px; font-size: 12px; color: #6b6459; background: #f7f6f3;
+    border-radius: 8px; padding: 8px 10px;
+  }
+  .card-lbc .watch { background: #e2e9f2; color: #3c4a5c; }
+  .section-title {
+    font-size: 14px; font-weight: 600; margin: 32px 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .methodology {
+    background: #fff; border: 1px solid #e6e2da; border-radius: 10px;
+    padding: 14px 18px; font-size: 12.5px; color: #4a463f; line-height: 1.6;
+  }
+  .methodology b { color: #1f1d1a; }
+  #history, #history-ux { display: flex; flex-direction: column; gap: 10px; }
+  .history-entry {
+    background: #fff; border: 1px solid #e6e2da; border-radius: 10px;
+    padding: 10px 14px; font-size: 12.5px; color: #4a463f;
+  }
+  .history-entry .date { font-weight: 600; color: #1f1d1a; margin-right: 6px; }
+  .empty-history { font-size: 12.5px; color: #9b958a; font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>Competitive Watch — Freelance Marketplaces</h1>
+<div class="subtitle">LittleBig Connection · weekly tracking of marketplace competitors</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="ux">UX Watch</button>
+  <button class="tab-btn" data-tab="marketplace">Marketplace Watch</button>
+</div>
+
+<div id="tab-ux" class="tab-panel active">
+
+<div class="meta-bar">
+  <span><b>9 competitors + LBC self-check</b></span>
+  <span>·</span>
+  <span>Last updated: <b id="last-updated-ux">July 9, 2026</b></span>
+  <span>·</span>
+  <span>Frequency: <b>weekly (Monday)</b></span>
+  <span>·</span>
+  <span>Sources: <b>Help Centers, official blogs, app stores, social media</b></span>
+</div>
+
+<div class="grid" id="cards-ux">
+
+  <div class="card card-lbc">
+    <div class="card-head"><h2>LittleBig Connection</h2><span class="tag tag-lbc">Self-check</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Product line</span>Public Help Center exposes a dedicated "Product Updates" category with versioned release notes (e.g. release 11.106) covering RFP publication timeline controls, a new purchases/supplier-performance reporting module, document attachments on proposals, and API improvements.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://support.littlebigconnection.com/hc/en-gb/categories/4411535926161-Product-Updates" target="_blank">LBC Help Center (official, publicly indexed)</a></span>
+      </li>
+      <li><span class="cat">Branding / VMS</span>"Eleven VMS" launched as a distinct, dedicated brand for the VMS product line, separating it from the Connect marketplace.<span class="conf conf-med">Confidence 60%</span>
+        <span class="src">Source: <a href="https://leadiq.com/c/littlebig-connection/5a1d9d9d23000059008d79dc" target="_blank">LeadIQ (aggregator, not independently confirmed on littlebigconnection.com)</a></span>
+      </li>
+      <li><span class="cat">AI / strategy</span>2026 priorities stated publicly: continued investment in platform, AI, and local teams to keep the experience "simple, reliable and consistent"; a 2024 LinkedIn post ("Shaping the future: AI at the heart of...") signals AI has been a recurring public talking point for over a year.<span class="conf conf-high">Confidence 80%</span>
+        <span class="src">Source: <a href="https://www.littlebigconnection.com/en/blog/business/2025-wrap-up" target="_blank">LBC Blog (official, 2025 wrap-up)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Self-check takeaway: our own Help Center release notes are the most detailed, dated, primary source available on us publicly — better documented than most competitors' changelogs. But we found no independent tech-press coverage of any specific feature launch (unlike Upwork, Fiverr, Deel) — a competitor scraping us would have to rely almost entirely on our own channels, with little third-party corroboration to cross-check against.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Malt</h2><span class="tag">FR / Europe</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Contract mgmt</span>"Seamless Project Renewals" — renew an ongoing project in one click, reducing admin friction for repeat missions.<span class="conf conf-med">Confidence 80%</span>
+        <span class="src">Source: <a href="https://www.malt.fr/resources/article/new-product-updates-april-2026" target="_blank">Malt Resources (official, April 2026 release notes)</a></span>
+      </li>
+      <li><span class="cat">Admin / back-office</span>"Quotes as Templates" — freelancers can turn a past quote into a reusable template to speed up new proposals.<span class="conf conf-med">Confidence 80%</span>
+        <span class="src">Source: <a href="https://www.malt.fr/resources/article/new-product-updates-april-2026" target="_blank">Malt Resources (official)</a></span>
+      </li>
+      <li><span class="cat">Content / positioning</span>Published "Malt Tech Trends 2026" — thought-leadership report, not a product feature but signals category positioning (this quarter's deep-dive: low-code).<span class="conf conf-med">Confidence 60%</span>
+        <span class="src">Source: <a href="https://www.malt.com/resources/trends/malt-tech-trends" target="_blank">Malt.com</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: how "highlighting user experience" (Malt's stated Q2 focus) translates into profile/portfolio redesign.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Fiverr</h2><span class="tag">Global / Public (FVRR)</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Seller tools</span>Seller Plus expansion: review pinning, "Request to Order" (buyer can ask questions before ordering), coupons on Custom Offers, buyer insights shown directly in the inbox.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://help.fiverr.com/hc/en-us/articles/360017140717-Seller-Plus-Standard-and-Premium-Advanced-tools-for-business-growth" target="_blank">Fiverr Help Center (official)</a></span>
+      </li>
+      <li><span class="cat">Payments</span>Faster payouts for Seller Plus members: 7-day clearance period instead of the standard 14 days.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://help.fiverr.com/hc/en-us/articles/360017140717-Seller-Plus-Standard-and-Premium-Advanced-tools-for-business-growth" target="_blank">Fiverr Help Center (official)</a></span>
+      </li>
+      <li><span class="cat">Analytics</span>New Keyword Research tool and trend lines added to Advanced Analytics (Gig Performance and Orders Breakdown tabs).<span class="conf conf-high">Confidence 80%</span>
+        <span class="src">Source: <a href="https://help.fiverr.com/hc/en-us/articles/360017140717-Seller-Plus-Standard-and-Premium-Advanced-tools-for-business-growth" target="_blank">Fiverr Help Center (official)</a></span>
+      </li>
+      <li><span class="cat">Dashboard / UX</span>Upgraded Seller Dashboard rolling out in 2026.<span class="conf conf-med">Confidence 65%</span>
+        <span class="src">Source: <a href="https://community.fiverr.com/public/forum/boards/from-the-fiverr-team-cd2/posts/new-changes-coming-to-your-seller-dashboard-jdxspjoq2g" target="_blank">Fiverr Community (official team post)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: Seller Plus becoming a de facto "pro tier" — LBC-relevant if it segments seller quality/visibility by paid tier.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Upwork</h2><span class="tag">Global / Public (UPWK)</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Homepage / discovery</span>Reimagined, AI-native homepage surfacing emerging AI roles and in-demand skills based on marketplace trends.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://www.upwork.com/blog/updates-spring-2026" target="_blank">Upwork Blog (official)</a></span>
+      </li>
+      <li><span class="cat">AI matching</span>"Uma" auto-generates work-history summaries for objective comparison; "Uma Recruiter" auto-shortlisting now available on the Basic plan.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://www.upwork.com/press/releases/upwork-updates-spring-2026-ai-powered-innovations-to-help-small-businesses-get-ambitious-work-done" target="_blank">Upwork Investor Relations (official)</a></span>
+      </li>
+      <li><span class="cat">Contracting / AI</span>In-meeting contract generator: captures key details from an Upwork video call and drafts a contract agenda from it.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.upwork.com/blog/updates-spring-2026" target="_blank">Upwork Blog (official)</a></span>
+      </li>
+      <li><span class="cat">Distribution</span>Upwork app launched inside ChatGPT — talent discovery directly within a third-party AI assistant.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.upwork.com/blog/updates-spring-2026" target="_blank">Upwork Blog (official)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: this is the most aggressive AI-native UX overhaul among all 9 — worth a dedicated teardown for LBC's own AI matching roadmap.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Lifted (by Upwork)</h2><span class="tag">Enterprise / EOR-AOR</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Compliance</span>EOR contracts (W-2 style employment) now handled natively through the Ascen acquisition, removing a manual classification step for enterprise buyers.<span class="conf conf-med">Confidence 60%</span>
+        <span class="src">Source: <a href="https://gigradar.io/blog/upwork-enterprise" target="_blank">GigRadar (third-party analysis, not yet cross-checked with an official Lifted source)</a></span>
+      </li>
+      <li><span class="cat">Enterprise tooling</span>Absorbed Bubty's contingent-workforce SaaS as a vendor management system (VMS) module.<span class="conf conf-med">Confidence 55%</span>
+        <span class="src">Source: <a href="https://gigradar.io/blog/upwork-enterprise" target="_blank">GigRadar</a></span>
+      </li>
+      <li><span class="cat">Platform migration</span>First wave of enterprise customers migrating onto Lifted's new dedicated platform (mid-2026).<span class="conf conf-med">Confidence 65%</span>
+        <span class="src">Source: <a href="https://www.staffingindustry.com/news/global-daily-news/upwork-targets-enterprise-workforce-with-launch-of-lifted" target="_blank">Staffing Industry Analysts</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: how the post-migration Lifted UX diverges from Upwork's core product — this is the direct enterprise UX comparison point for LBC.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Freelancer.com</h2><span class="tag">Global / Public (ASX: FLN)</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Trust &amp; verification</span>Claimed rollout of blockchain-verified skills and NFT-based portfolio showcases in 2026.<span class="conf conf-low">Confidence 35%</span>
+        <span class="src">Source: generic listicle articles only — no confirmation found on Freelancer's official press page (<a href="https://www.freelancer.com/about/press" target="_blank">freelancer.com/about/press</a>); treat as unverified until corroborated</span>
+      </li>
+    </ul>
+    <div class="watch">No other UX/feature update surfaced this week beyond the unverified blockchain/NFT claim — worth a direct check of Freelancer's app release notes next pass.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>LeHibou</h2><span class="tag">FR — Tech &amp; Innovation</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Mobile / notifications</span>iOS app update: alert management for new missions (add/edit/delete alerts) and a new home-screen availability widget.<span class="conf conf-med">Confidence 60%</span>
+        <span class="src">Source: <a href="https://apps.apple.com/us/app/lehibou-freelance-it/id6468558589" target="_blank">Apple App Store listing</a></span>
+      </li>
+      <li><span class="cat">Onboarding / application flow</span>Freelancers can now edit their motivation letter after applying, plus a new recommendation-request step during sign-up and after applying to a mission.<span class="conf conf-med">Confidence 60%</span>
+        <span class="src">Source: <a href="https://apps.apple.com/us/app/lehibou-freelance-it/id6468558589" target="_blank">Apple App Store listing</a></span>
+      </li>
+      <li><span class="cat">New vertical / AI</span>"LeHibou AI" — dedicated access point to ~4,300 vetted AI experts (architecture, MLOps, LLM, RAG, AI security).<span class="conf conf-med">Confidence 55%</span>
+        <span class="src">Source: <a href="https://www.lehibou.com/lehibou-ai" target="_blank">LeHibou.com (official, not independently corroborated)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: whether "LeHibou AI" becomes a separate product experience or stays a filtered view of the main marketplace.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Comet</h2><span class="tag">FR — IT Freelance</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">No update found</span>No new feature or UX update identified this week. Existing differentiators (AI-assisted vetting/matching, included professional liability insurance, pan-European Slack community) are established features, not new releases.<span class="conf conf-na">N/A</span>
+        <span class="src">Source: <a href="https://www.comet.co/blog" target="_blank">Comet.co blog</a> — reviewed, no product-update posts this period</span>
+      </li>
+    </ul>
+    <div class="watch">Caution: "Comet" is also the name of Perplexity's AI browser — always qualify searches with "comet.co" or "freelance" to avoid pulling in unrelated results (happened during this week's research pass).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Toptal</h2><span class="tag">Global — Elite Talent</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">No update found</span>No new feature or UX update identified this week. Prior expansions (Toptal Marketing since Cannes Lions 2024, HireGlobal for payroll/compliance) predate this period.<span class="conf conf-na">N/A</span>
+        <span class="src">Source: <a href="https://www.toptal.com/press-center" target="_blank">Toptal Press Center</a> — no new entries this period</span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: check LinkedIn/Toptal blog directly next pass — public product communication has been unusually quiet for a company this size.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Deel</h2><span class="tag">Global — HR/Payroll Tech</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li><span class="cat">Release process</span>New product release framework (announced March 2026): features now ship on a predictable monthly cadence, the second Wednesday of every month.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://www.deel.com/blog/new-product-release-framework/" target="_blank">Deel Blog (official)</a></span>
+      </li>
+      <li><span class="cat">AI / automation</span>Launched "AI Workforce" — a suite of proactive AI agents that own parts of hiring, onboarding, payroll, IT, and compliance workflows.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.deel.com/blog/big-deel-recap-2026/" target="_blank">Deel Blog (official)</a></span>
+      </li>
+      <li><span class="cat">Compliance / mobility</span>"Deel Mobility": work-permit applications, right-to-work checks, and renewal alerts integrated with contracts and payroll data.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.deel.com/blog/whats-new-february-2026/" target="_blank">Deel Blog (official)</a></span>
+      </li>
+      <li><span class="cat">Mobile / payments</span>Rebuilt native mobile transactions experience (fully React Native) plus Anytime Pay notifications.<span class="conf conf-high">Confidence 80%</span>
+        <span class="src">Source: <a href="https://www.deel.com/blog/whats-new-february-2026/" target="_blank">Deel Blog (official)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: Deel is shipping UX/product updates faster and more transparently (public monthly cadence) than any other tracked competitor — a useful benchmark for LBC's own release communication.</div>
+  </div>
+
+</div>
+
+<div class="section-title">Methodology &amp; source reliability</div>
+<div class="methodology">
+  <b>Sources scanned per competitor</b>: Help Center / changelog / release-notes pages, official product blogs and press releases, App Store / Google Play release notes, official social media (LinkedIn, X, YouTube demos).<br>
+  <b>Preferred sources</b>: official Help Center or blog release notes, official press releases — these get the highest confidence since they describe the actual shipped feature.<br>
+  <b>Lower-confidence sources</b>: community forums relaying an official announcement, third-party blogs describing a feature without a primary source, generic "best platforms" listicles — flagged with a confidence score ≤65%, or explicitly marked "unverified" when no primary source could be found at all.<br>
+  <b>Confidence score</b>: <span class="conf conf-high">≥80% = reliable, primary source</span> <span class="conf conf-med">55-79% = needs cross-checking</span> <span class="conf conf-low">&lt;55% = needs verification</span> <span class="conf conf-na">N/A = no update found this period</span>.<br>
+  <b>LittleBig Connection card</b> (shaded blue-gray): this is not a competitor entry — it applies the exact same public-source methodology to LBC itself, so we can see what a competitor doing OSINT on us would actually find, and judge whether that picture is accurate and complete.<br>
+  This page is updated automatically every week; the entries above reflect research conducted on <b>July 8, 2026</b>.
+</div>
+
+<div class="section-title">Update history</div>
+<div id="history-ux">
+  <div class="history-entry"><span class="date">July 9, 2026</span> — One-day follow-up pass: no new product/UX-specific releases identified for any of the 9 competitors or LittleBig Connection since July 8 (Toptal's news this week was M&amp;A activity, tracked on the Marketplace Watch tab, not a UX change). All UX Watch cards and confidence scores remain as of July 8, 2026.</div>
+  <div class="history-entry"><span class="date">July 8, 2026</span> — Added the LittleBig Connection self-check card and moved UX Watch to the first tab. UX Watch created earlier the same day with a first research pass across all 9 competitors' Help Centers, product blogs, app stores and social channels.</div>
+</div>
+
+</div>
+
+<div id="tab-marketplace" class="tab-panel">
+
+<div class="meta-bar">
+  <span><b>9 competitors + LBC self-check</b></span>
+  <span>·</span>
+  <span>Last updated: <b id="last-updated">July 9, 2026</b></span>
+  <span>·</span>
+  <span>Frequency: <b>weekly (Monday)</b></span>
+</div>
+
+<div class="grid" id="cards">
+
+  <div class="card card-lbc">
+    <div class="card-head"><h2>LittleBig Connection</h2><span class="tag tag-lbc">Self-check</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>Two product lines publicly described: "Connect" (marketplace, ~500,000 talents/service providers) and "Rise" / "Eleven VMS" (purchasing-department platform for managing external resources end-to-end).<span class="conf conf-high">Confidence 80%</span>
+        <span class="src">Source: <a href="https://www.littlebigconnection.com/en/platform" target="_blank">LBC.com (official)</a></span>
+      </li>
+      <li>Revenue reported at €400M in 2023 with a stated ambition of €500M by 2025; ~400 employees, operations in 50 countries.<span class="conf conf-low">Confidence 45%</span>
+        <span class="src">Source: <a href="https://www.zoominfo.com/c/little-big-connection/425780834" target="_blank">ZoomInfo</a>, <a href="https://leadiq.com/c/littlebig-connection/5a1d9d9d23000059008d79dc" target="_blank">LeadIQ</a> — aggregator estimates, not confirmed on an official LBC financial disclosure (LBC is private and not required to publish accounts publicly)</span>
+      </li>
+      <li>Public funding trackers show only one very old round: $1.1M in 2017 — clearly stale/incomplete relative to a company of this reported size.<span class="conf conf-low">Confidence 40%</span>
+        <span class="src">Source: <a href="https://www.crunchbase.com/organization/little-big-connection" target="_blank">Crunchbase</a>, <a href="https://pitchbook.com/profiles/company/264547-36" target="_blank">PitchBook</a></span>
+      </li>
+      <li>2026 stated priority: expand collaboration across all "intellectual services" (beyond IT), continued investment in platform, AI and local teams.<span class="conf conf-high">Confidence 80%</span>
+        <span class="src">Source: <a href="https://www.littlebigconnection.com/en/blog/business/2025-wrap-up" target="_blank">LBC Blog (official, 2025 wrap-up)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Self-check takeaway: financial/funding data on third-party trackers (Crunchbase, PitchBook, ZoomInfo) is stale or unconfirmed — a competitor relying on those tools alone would badly underestimate us. Our own blog is the only reliable primary source for strategic direction; there is no independent financial press coverage to cross-check revenue claims against, unlike public competitors (Fiverr, Upwork, Freelancer.com, Deel).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Malt</h2><span class="tag">FR / Europe</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>850,000 freelancers on the marketplace, 1,640 employees (Feb 2026). Published the "Malt Tech Trends 2026" report.<span class="conf conf-med">Confidence 70%</span>
+        <span class="src">Source: <a href="https://tracxn.com/d/companies/malt/__rT6uv8EpLLHA9wEaOtMlspJrAheSPlOkzDPtfIg40qA" target="_blank">Tracxn</a></span>
+      </li>
+      <li>Last known funding round: €80M in 2021 (Goldman Sachs Growth Equity, Eurazeo), $489M valuation. No new round identified since.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://techcrunch.com/2021/05/31/malt-raises-97m-at-a-489m-valuation-for-its-freelance-marketplace-for-developers/" target="_blank">TechCrunch</a>, <a href="https://sifted.eu/articles/malt-fundraise-freelancers" target="_blank">Sifted</a></span>
+      </li>
+      <li>AI-powered search integrated to speed up talent sourcing and matching.<span class="conf conf-med">Confidence 65%</span>
+        <span class="src">Source: <a href="https://www.malt.com/" target="_blank">Malt.com</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: new funding round, international expansion, enterprise-facing AI features.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Fiverr</h2><span class="tag">Global / Public (FVRR)</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>Q1 2026 results: revenue $105.5M (above expectations), EPS $0.62, stock +16.8% pre-market despite a 1.6% YoY revenue decline.<span class="conf conf-high">Confidence 95%</span>
+        <span class="src">Source: <a href="https://www.fiverr.com/news/fiverr-q1-2026-earnings" target="_blank">Official Fiverr release</a>, <a href="https://www.fool.com/earnings/call-transcripts/2026/04/30/fiverr-fvrr-q1-2026-earnings-transcript/" target="_blank">Motley Fool</a></span>
+      </li>
+      <li>Launched "AI Video Hub" (03/23/2026) — new AI-driven video production offering.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://investors.fiverr.com/press-releases" target="_blank">Fiverr Investor Relations</a></span>
+      </li>
+      <li>AI categories growing fast: AI development +118% YoY; $1,000+ projects +18% YoY. Q2 2026 guidance: revenue -13% to -5% YoY.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://m.investing.com/news/transcripts/earnings-call-transcript-fiverr-q1-2026-revenue-beats-forecast-stock-soars-93CH-4645561" target="_blank">Investing.com</a></span>
+      </li>
+      <li>Q2 2026 results confirmed for release before market open on July 29, 2026 (no results published yet — nothing to assess this pass).<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://www.stocktitan.net/news/FVRR/fiverr-to-release-second-quarter-2026-results-on-july-29-midnku8glzrl.html" target="_blank">StockTitan (official release date confirmation)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: upmarket push (>$1,000 projects), pace of AI product releases, Q2 2026 results due July 29.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Upwork</h2><span class="tag">Global / Public (UPWK)</span></div>
+    <div class="updated">Updated: Jul 9, 2026</div>
+    <ul class="items">
+      <li>Board refreshment: Claire Bramley (CFO of Xero, ex-CFO Teradata, ex-HP finance leadership) and David Lissy (former CEO/executive chairman of Bright Horizons through its IPO) joined the Board following the June 4, 2026 Annual Meeting, both seated on the Audit, Risk &amp; Compliance Committee. Anilu Vazquez-Ubarri and Leela Srinivasan departed after 5 and 6 years of service respectively.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://investors.upwork.com/news-releases/news-release-details/upwork-announces-board-refreshment-strengthening-financial-and" target="_blank">Upwork Investor Relations (official)</a></span>
+      </li>
+      <li>"Upwork Updates Spring 2026": platform redesign, AI work-history summaries via "Uma", "Uma Recruiter" auto-shortlisting, supervised AI agents in beta in Q2, ChatGPT integration (April 2026).<span class="conf conf-high">Confidence 95%</span>
+        <span class="src">Source: <a href="https://www.upwork.com/press/releases/upwork-updates-spring-2026-ai-powered-innovations-to-help-small-businesses-get-ambitious-work-done" target="_blank">Official Upwork release</a></span>
+      </li>
+      <li>Q1 2026: EPS $0.35 (beat), revenue $195.5M (slightly below consensus). AI-related work exceeds $300M annualized, +40% YoY.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://investors.upwork.com/news-releases/news-release-details/upwork-reports-first-quarter-2026-financial-results" target="_blank">Upwork Investor Relations</a></span>
+      </li>
+      <li>Restructuring: 24% workforce reduction, targeting $70M in annual savings.<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://www.investing.com/news/company-news/upwork-q1-2026-slides-ai-growth-accelerates-amid-flat-revenue-93CH-4677572" target="_blank">Investing.com</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: full rollout of AI agents (by year-end), impact of restructuring on service quality, and whether the refreshed board (both new members are finance/ops-heavy, not product) signals a more cost-discipline-led next chapter.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Lifted (by Upwork)</h2><span class="tag">Enterprise / EOR-AOR</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>Formerly "Upwork Enterprise", rebranded Lifted (Aug 2025) — dedicated subsidiary for enterprise sourcing/contracting/payroll (EOR, AOR, staff aug, SOW).<span class="conf conf-high">Confidence 90%</span>
+        <span class="src">Source: <a href="https://support.upwork.com/hc/en-us/articles/44023570654995-What-is-Lifted-an-Upwork-company" target="_blank">Upwork Help (official)</a></span>
+      </li>
+      <li>First wave of enterprise customer migrations to the new platform planned for end of June 2026; pipeline up 3x for new clients, 9x for existing clients.<span class="conf conf-med">Confidence 70%</span>
+        <span class="src">Source: <a href="https://www.staffingindustry.com/news/global-daily-news/upwork-targets-enterprise-workforce-with-launch-of-lifted" target="_blank">Staffing Industry Analysts</a></span>
+      </li>
+      <li>Enterprise/Lifted segment ≈13% of total Upwork revenue (Q3 2025, ~$27.2M, +3% YoY). Access to 250,000+ AI experts from the Upwork marketplace.<span class="conf conf-med">Confidence 65%</span>
+        <span class="src">Source: <a href="https://gigradar.io/blog/upwork-enterprise" target="_blank">GigRadar</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: results post-platform migration, direct positioning vs. LBC on the enterprise segment.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Freelancer.com</h2><span class="tag">Global / Public (ASX: FLN)</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>Q1 2026: GMV +14% YoY (AUD 263.3M), group revenue -9.4% YoY, stock +8% on announcement. Escrow segment hit record profitability (+18.9%).<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://za.investing.com/news/stock-market-news/earnings-call-transcript-freelancer-q1-2026-sees-mixed-results-stock-jumps-8-93CH-4224436" target="_blank">Investing.com</a></span>
+      </li>
+      <li>FY2025: first-ever record net profit ($2.2M), returning to profitability after the prior year's loss.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.tipranks.com/news/company-announcements/freelancer-ltd-earnings-call-shows-profitable-turnaround" target="_blank">TipRanks</a></span>
+      </li>
+      <li>FY2026 roadmap: mobile/desktop UX improvements, better matching, accelerated AI push and advanced payment solutions for enterprise.<span class="conf conf-med">Confidence 60%</span>
+        <span class="src">Source: <a href="https://pitchbook.com/profiles/company/56866-24" target="_blank">PitchBook</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: ability to turn the profitability rebound into revenue growth, follow-through on announced AI features. Next earnings due Jul 28, 2026.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>LeHibou</h2><span class="tag">FR — Tech &amp; Innovation</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>+32% growth in 2025 (revenue ~€150M), targeting €200M in 2026. Joined the Next40 in 2025 (after 2 years in French Tech 120).<span class="conf conf-low">Confidence 45%</span>
+        <span class="src">Source: <a href="https://frenchtech120.numeum.fr/voir/275481-lehibou/" target="_blank">Numeum / French Tech 120</a> — figures not cross-checked against an independent financial source</span>
+      </li>
+      <li>100% free model for freelancers (no commission taken), 140,000 listed IT experts, positioned as an alternative to traditional ESNs (IT staffing firms).<span class="conf conf-med">Confidence 55%</span>
+        <span class="src">Source: <a href="https://www.lehibou.com/en" target="_blank">LeHibou.com</a> (official site, needs independent verification)</span>
+      </li>
+      <li>Hiring plan: +30 people across all departments in 2026.<span class="conf conf-low">Confidence 50%</span>
+        <span class="src">Source: <a href="https://www.welcometothejungle.com/fr/companies/lehibou/culture-1" target="_blank">Welcome to the Jungle</a></span>
+      </li>
+    </ul>
+    <div class="watch">Sources are mostly proprietary/promotional — cross-check with Infogreffe/Societe.com to validate revenue figures before acting on them.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Comet</h2><span class="tag">FR — IT Freelance</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>New €10M funding round in 2025 to accelerate growth; new supervisory board with prominent tech/business figures.<span class="conf conf-med">Confidence 65%</span>
+        <span class="src">Source: <a href="https://www.frenchweb.fr/comet-leve-11-millions-deuros-pour-preparer-son-expansion-en-europe/325913" target="_blank">FrenchWeb</a>, <a href="https://www.lemondeinformatique.fr/actualites/lire-comet-leve-4-meteuro-avec-la-rentabilite-et-l-international-dans-le-viseur-87059.html" target="_blank">Le Monde Informatique</a></span>
+      </li>
+      <li>Laurent Potel confirmed as CEO, focused on profitability and European expansion. Community of roughly 50,000 selected independent experts.<span class="conf conf-med">Confidence 60%</span>
+        <span class="src">Source: <a href="https://www.comet.co/blog/laurent-potel-sur-lavenir-du-freelancing-et-lessor-des-plateformes-centrees-sur-lhumain" target="_blank">Comet.co (official blog)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Funding amounts are inconsistent across articles (€2M/€4M/€10M/€11M at different dates) — to clarify in the next research pass. Note: "Comet" also names Perplexity's AI browser — always search with "comet.co" or "freelance" qualifiers to avoid mixing up results.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Toptal</h2><span class="tag">Global — Elite Talent</span></div>
+    <div class="updated">Updated: Jul 9, 2026</div>
+    <ul class="items">
+      <li>Two new acquisitions extend the talent network beyond tech: QO Collective (announced June 18, 2026) — a management-consulting talent network connecting enterprises with vetted professionals from top business schools and leading consultancies; and Adeva (announced May 26, 2026) — a global IT talent network of vetted developers, architects, and technology consultants. This corrects last week's "media silence" read — Toptal has in fact been active, just via M&amp;A rather than product PR.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.toptal.com/press-center/toptal-announces-acquisition-of-qo-collective" target="_blank">Toptal Press Center (official)</a>, <a href="https://www.toptal.com/press-center/toptal-announces-acquisition-of-adeva" target="_blank">Toptal Press Center (official)</a></span>
+      </li>
+      <li>Ranked #11 on Newsweek's "Most Reliable Companies in America 2026" — the highest-ranked professional services firm on the list.<span class="conf conf-med">Confidence 70%</span>
+        <span class="src">Source: <a href="https://www.toptal.com/services/technology-services/artificial-intelligence-development" target="_blank">Toptal.com</a> (to be cross-checked directly against Newsweek)</span>
+      </li>
+      <li>Expanded AI talent offering (AI developers, designers, product managers); acceptance rate below 3% of applicants.<span class="conf conf-med">Confidence 55%</span>
+        <span class="src">Source: <a href="https://www.toptal.com/product-managers/artificial-intelligence" target="_blank">Toptal.com</a></span>
+      </li>
+    </ul>
+    <div class="watch">M&amp;A is Toptal's primary growth lever right now — 5+ acquisitions since April 2024 (VironIT, Growth Collective/Toptal Marketing, Graphite, NSI, Adeva, QO Collective). Public product/UX communication is still comparatively quiet by comparison; check LinkedIn and the engineering/design/product blogs directly next pass.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Deel</h2><span class="tag">Global — HR/Payroll Tech</span></div>
+    <div class="updated">Updated: Jul 8, 2026</div>
+    <ul class="items">
+      <li>$300M Series E at a $17.3B valuation, co-led by Ribbit Capital, a16z, and Coatue.<span class="conf conf-high">Confidence 95%</span>
+        <span class="src">Source: <a href="https://www.deel.com/blog/new-investment-valuation/" target="_blank">Deel (official)</a>, <a href="https://news.crunchbase.com/venture/deel-ai-hr-payroll-unicorn-saas-ribbit-a16z/" target="_blank">Crunchbase News</a></span>
+      </li>
+      <li>$1.4B ARR (up from $1B in 2025), 3 consecutive years of profitability, first-ever $100M revenue month.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.sourcery.vc/p/breaking-deel-hits-14b-arr-ceo-alex" target="_blank">Sourcery VC</a></span>
+      </li>
+      <li>Launched "Field Services" (June 2026) to manage physical workforces globally; continued AI investment in payroll/HR products.<span class="conf conf-high">Confidence 85%</span>
+        <span class="src">Source: <a href="https://www.deel.com/blog/new-investment-valuation/" target="_blank">Deel (official)</a></span>
+      </li>
+    </ul>
+    <div class="watch">Watch for: the "100 million employees served" ambition — Deel is expanding well beyond pure freelance work, worth tracking for LBC's positioning.</div>
+  </div>
+
+</div>
+
+<div class="section-title">Methodology &amp; source reliability</div>
+<div class="methodology">
+  <b>Preferred sources</b>: official press releases / investor relations, earnings call transcripts, recognized trade press (TechCrunch, Sifted, Crunchbase News, Staffing Industry Analysts, FinTech Futures), data platforms (PitchBook, Tracxn).<br>
+  <b>Lower-confidence sources</b>: proprietary company blogs/sites without external corroboration, promotional directories (French Tech 120, Welcome to the Jungle) — flagged with a confidence score ≤55%.<br>
+  <b>Confidence score</b>: a qualitative estimate combining source type, cross-referencing across multiple sources, and recency. <span class="conf conf-high">≥80% = reliable</span> <span class="conf conf-med">55-79% = needs cross-checking</span> <span class="conf conf-low">&lt;55% = needs verification</span>.<br>
+  <b>LittleBig Connection card</b> (shaded blue-gray): applies the same methodology to LBC itself, to check what a competitor doing OSINT on us would find and how accurate/complete it would be.<br>
+  This page is updated automatically every week; the entries above reflect research conducted on <b>July 8, 2026</b>.
+</div>
+
+<div class="section-title">Update history</div>
+<div id="history">
+  <div class="history-entry"><span class="date">July 9, 2026</span> — One-day follow-up pass. New: Upwork added Claire Bramley (Xero CFO) and David Lissy to its Board (announced June 5, 2026, official IR release); Toptal's continued acquisition streak surfaced — QO Collective (June 18) and Adeva (May 26) — correcting last week's "media silence" read, and its "no major launch" line was removed as outdated. Minor calendar notes added for Fiverr (Q2 2026 results due Jul 29) and Freelancer.com (next earnings Jul 28). No material change for Malt, Lifted, LeHibou, Comet, Deel, or LittleBig Connection since July 8 — existing entries and confidence scores stand.</div>
+  <div class="history-entry"><span class="date">July 8, 2026</span> — Added the LittleBig Connection self-check card. Watch created earlier the same day with a first research pass across all 9 competitors (Malt, Fiverr, Upwork, Lifted, Freelancer.com, LeHibou, Comet, Toptal, Deel).</div>
+</div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
