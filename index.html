@@ -147,9 +147,10 @@
     display: flex; align-items: center; justify-content: center;
     color: #fff; font: 700 15px 'Poppins', sans-serif; box-shadow: 0 6px 16px rgba(0,0,0,.40);
   }
-  .vc-id { min-width: 0; }
-  .vc-name { display: flex; align-items: center; gap: 7px; font: 600 17px/1.2 'Poppins', sans-serif; color: var(--vc-text); }
-  .vc-name-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vc-id { min-width: 0; flex: 1 1 auto; }
+  .vc-name { display: flex; align-items: center; gap: 7px; font: 600 17px/1.2 'Poppins', sans-serif; color: var(--vc-text); min-width: 0; }
+  .vc-name-text { display: block; min-width: 0; flex: 1 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vc-card[data-status="new"] .vc-head { padding-right: 78px; }
   .vc-flag { font-size: 15px; }
   .vc-country { font: 500 12px 'Poppins', sans-serif; color: var(--vc-text-2); margin-top: 3px; }
 
