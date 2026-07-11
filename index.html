@@ -124,10 +124,9 @@
     transition: transform .28s cubic-bezier(.2,0,0,1), box-shadow .28s cubic-bezier(.2,0,0,1);
   }
   .vc-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.36); }
-  .vc-card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:6px; background: var(--vc-accent); }
-  .vc-card[data-status="new"]      { --vc-accent: var(--vc-accent-new); }
-  .vc-card[data-status="read"]     { --vc-accent: var(--vc-accent-read); }
-  .vc-card[data-status="uptodate"] { --vc-accent: var(--vc-accent-uptodate); }
+  .vc-card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:6px; background: transparent; }
+  .vc-card[data-status="new"] { --vc-accent: var(--vc-accent-uptodate); }
+  .vc-card[data-status="new"]::before { background: var(--vc-accent); }
 
   .vc-badge {
     display: none; position: absolute; top: 14px; right: 14px; align-items: center; gap: 7px;
@@ -160,7 +159,8 @@
     font: 500 11.5px 'Poppins', sans-serif; color: var(--vc-text); margin-bottom: 16px;
   }
 
-  .vc-signal { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+  .vc-signal { display: none; align-items: center; gap: 11px; margin-bottom: 14px; }
+  .vc-card[data-status="new"] .vc-signal { display: flex; }
   .vc-signal-icon { font-size: 24px; color: var(--vc-accent); }
   .vc-signal-label { font: 600 14px 'Poppins', sans-serif; color: var(--vc-text); }
   .vc-signal-sub   { font: 400 11.5px 'Poppins', sans-serif; color: var(--vc-text-2); }
