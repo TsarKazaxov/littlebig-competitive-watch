@@ -399,7 +399,7 @@
   window.navigate = navigate;
 
   function renderNav(active){
-    var html = '<a class="nav-pill home" onclick="navigate(\'#/\')">Home</a>';
+    var html = '<a class="nav-pill'+(active==='home'?' active':'')+'" onclick="navigate(\'#/\')">Home</a>';
     DATA.categories.forEach(function(c){
       if(c.id === 'self-check') return;
       html += '<a class="nav-pill'+(active===('cat:'+c.id)?' active':'')+'" onclick="navigate(\'#/category/'+c.id+'\')">'+esc(c.label)+'</a>';
