@@ -408,6 +408,12 @@
     document.getElementById('nav-bar').innerHTML = html;
   }
 
+  function renderBackNav(hash, label){
+    document.getElementById('nav-bar').innerHTML =
+      '<a class="nav-pill home" onclick="navigate(\''+hash+'\')">&larr; '+esc(label)+'</a>' +
+      '<a class="nav-pill" onclick="navigate(\'#/\')">Home</a>';
+  }
+
   function renderMetaBar(){
     document.getElementById('meta-bar').innerHTML =
       '<span><b>'+DATA.meta.entityCount+' entities</b> across <b>'+DATA.categories.length+' categories</b></span>' +
@@ -459,10 +465,10 @@
 
   function companyView(id){
     var ent = entById[id];
-    renderNav(null);
-    if(!ent){ document.getElementById('app').innerHTML = '<p>Unknown entity.</p>'; return; }
+    if(!ent){ renderNav(null); document.getElementById('app').innerHTML = '<p>Unknown entity.</p>'; return; }
     markViewed(ent);
     var cat = catById[ent.category];
+    renderBackNav('#/category/'+cat.id, 'Back to '+cat.label);
     var html = '<div class="breadcrumb"><a onclick="navigate(\'#/\')">Home</a> / <a onclick="navigate(\'#/category/'+cat.id+'\')">'+esc(cat.label)+'</a> / '+esc(ent.name)+'</div>';
     html += '<div class="company-head">'+logoBadge(ent,52)+'<div><h1>'+flagSpan(ent)+esc(ent.name)+newBadge(ent)+'</h1><span class="tag'+(ent.special==='lbc'?' tag-lbc':'')+'">'+esc(ent.tag)+'</span></div></div>';
     html += '<div class="company-sub">Category: '+esc(cat.label)+'</div>';
