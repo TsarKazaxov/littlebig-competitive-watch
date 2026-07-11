@@ -334,7 +334,12 @@
     var label = CATEGORY_SHORT[ent.category] || (cat ? cat.label : '');
     return '<span class="pill-type" style="background:'+hexToRgba(color,0.14)+';color:'+color+'">'+esc(label)+'</span>';
   }
-  function marketPill(ent){ return '<span class="pill-market">'+esc(ent.tag)+'</span>'; }
+  function marketPill(ent){
+    var cat = catById[ent.category];
+    var typeLabel = CATEGORY_SHORT[ent.category] || (cat ? cat.label : '');
+    if(!ent.tag || ent.tag === typeLabel) return '';
+    return '<span class="pill-market">'+esc(ent.tag)+'</span>';
+  }
 
   function homeView(){
     renderNav('home');
