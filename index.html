@@ -177,7 +177,7 @@
   .filter-chip.active { background: var(--blue-primary); border-color: var(--blue-primary); color: #fff; }
   .filter-chip.new-toggle.active { background: var(--orange); border-color: var(--orange); }
   .filter-sep { width: 1px; align-self: stretch; background: var(--divider); margin: 0 2px; }
-  .filter-reset { font-size: 11.5px; color: var(--blue-medium); cursor: pointer; text-decoration: none; border-bottom: 1px dotted var(--blue-tint); margin-left: 2px; }
+  .filter-reset { font-size: 11.5px; font-weight: 600; color: var(--orange); cursor: pointer; text-decoration: none; border-bottom: 1px dotted var(--orange); margin-left: 4px; }
   .empty-state { font-size: 12.5px; color: var(--text-muted); font-style: italic; padding: 10px 2px 24px; }
 </style>
 </head>
@@ -239,6 +239,7 @@
     return diffDays >= 0 && diffDays <= 30;
   }
   function passesFilters(ent){
+    if(ent.special === 'lbc') return true; // self-check reference card: always shown, exempt from market/new filters
     if(FILTERS.newOnly && !isNewEntity(ent)) return false;
     if(!countryActive(ent.country)) return false;
     return true;
@@ -258,7 +259,10 @@
     });
     html += '<span class="filter-sep"></span>';
     html += '<button class="filter-chip new-toggle'+(FILTERS.newOnly?' active':'')+'" onclick="toggleNewOnly()">New only</button>';
-    html += '<a class="filter-reset" onclick="resetFilters()">Reset filters</a>';
+    var filtersActive = FILTERS.newOnly || (FILTERS.countries && FILTERS.countries.length !== codes.length);
+    if(filtersActive){
+      html += '<a class="filter-reset" onclick="resetFilters()">&#9888; Filters active — reset to show all</a>';
+    }
     html += '</div>';
     return html;
   }
